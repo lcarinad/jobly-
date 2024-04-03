@@ -53,10 +53,18 @@ function ensureAdmin(req, res, next) {
 }
 
 function ensureAdminOrCurrUser(req, res, next) {
+  // console.log(
+  //   `req param:${req.params.username}    currUser:${res.locals.user.username}`
+  // );
+  // console.log(
+  //   `is curr user:${res.locals.user.username === req.params.username}`
+  // );
   try {
-    if (res.locals.user.isAdmin) ensureAdmin;
-    else if (res.locals.user === req.params.username) ensureLoggedIn;
-    else {
+    if (res.locals.user.isAdmin) {
+      ensureAdmin(req, res, next);
+    } else if (res.locals.user.username === req.params.username) {
+      ensureLoggedIn(req, res, next);
+    } else {
       throw new UnauthorizedError();
     }
   } catch (err) {
