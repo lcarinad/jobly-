@@ -34,9 +34,7 @@ function authenticateJWT(req, res, next) {
 
 function ensureLoggedIn(req, res, next) {
   try {
-    console.log(`*************res locals user: ${res.locals.user}`);
     if (!res.locals.user) throw new UnauthorizedError();
-
     return next();
   } catch (err) {
     return next(err);
@@ -54,8 +52,21 @@ function ensureAdmin(req, res, next) {
   }
 }
 
+function ensureAdminOrCurrUser(req, res, next) {
+  try {
+    if (res.locals.user.isAdmin) ensureAdmin;
+    else if (res.locals.user === req.params.username) ensureLoggedIn;
+    else {
+      throw new UnauthorizedError();
+    }
+  } catch (err) {
+    return next(err);
+  }
+}
+
 module.exports = {
   authenticateJWT,
   ensureLoggedIn,
   ensureAdmin,
+  ensureAdminOrCurrUser,
 };
