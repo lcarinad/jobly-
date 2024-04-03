@@ -60,7 +60,6 @@ async function commonBeforeAll() {
       companyHandle: "c1",
     })
   ).id;
-
   await User.register({
     username: "u1",
     firstName: "U1F",
