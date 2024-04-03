@@ -20,10 +20,11 @@ const router = new express.Router();
  *
  * Returns { title, salary, equity, companyHandle }
  *
- * Authorization required: login
+ * Authorization required: admin
  */
 router.post("/", ensureAdmin, async function (req, res, next) {
   try {
+    console.log(`****************${req.body}`);
     const validator = jsonschema.validate(req.body, jobNewSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);
@@ -103,11 +104,12 @@ router.patch("/:id", ensureAdmin, async function (req, res, next) {
 
 /** DELETE /[handle]  =>  { deleted: handle }
  *
- * Authorization: login
+ * Authorization: admin
  */
 
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:id", ensureAdmin, async function (req, res, next) {
   try {
+    console.log(`*****job id:${req.params.id}`);
     await Job.remove(req.params.id);
     return res.json({ deleted: req.params.id });
   } catch (err) {

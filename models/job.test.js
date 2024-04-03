@@ -112,6 +112,27 @@ describe("get", function () {
   });
 });
 
+/************************************** update */
+
+describe("patch", function () {
+  test("works", async function () {
+    let job = await db.query(`SELECT id, title FROM jobs WHERE title = 'j1'`);
+    const jobId = job.rows[0].id;
+    let data = { title: "j-new" };
+    await Job.update(jobId, data);
+
+    job = await db.query(`SELECT * FROM jobs WHERE id = $1`, [jobId]);
+
+    expect(job.rows[0]).toEqual({
+      id: jobId,
+      title: "j-new",
+      salary: 100000,
+      equity: "0.01",
+      company_handle: "c1",
+    });
+  });
+});
+
 /************************************** remove */
 
 describe("remove", function () {

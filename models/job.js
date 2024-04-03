@@ -16,25 +16,13 @@ class Job {
    * Throws BadRequestError if job already in database.
    * */
 
-  static async create({ title, salary, equity, companyHandle }) {
-    const duplicateCheck = await db.query(
-      `SELECT title, company_handle AS "companyHandle"
-           FROM jobs
-           WHERE title = $1 AND company_handle = $2`,
-      [title, companyHandle]
-    );
-
-    if (duplicateCheck.rows[0])
-      throw new BadRequestError(
-        `Duplicate job title, ${title} at ${companyHandle}`
-      );
-
+  static async create(data) {
     const result = await db.query(
       `INSERT INTO jobs
            (title, salary, equity, company_handle )
            VALUES ($1, $2, $3, $4)
            RETURNING id, title, salary, equity, company_handle AS "companyHandle"`,
-      [title, salary, equity, companyHandle]
+      [data.title, data.salary, data.equity, data.companyHandle]
     );
     const job = result.rows[0];
 
@@ -47,7 +35,7 @@ class Job {
    * */
 
   static async findAll(title, minSalary, hasEquity) {
-    let query = `SELECT id, title, salary, equity, name AS "companyName" 
+    let query = `SELECT id, title, salary, equity, company_handle AS "companyHandle" 
       FROM jobs
       JOIN companies ON jobs.company_handle = companies.handle`;
     const values = [];
@@ -77,7 +65,7 @@ class Job {
 
   static async get(id) {
     let jobs = await db.query(
-      `SELECT j.id, j.title, j.salary, j.equity, c.name AS "companyName" FROM jobs AS "j" 
+      `SELECT j.id, j.title, j.salary, j.equity, c.handle AS "companyHandle" FROM jobs AS "j" 
       JOIN companies AS "c" ON j.company_handle = c.handle 
       WHERE id = $1`,
       [id]

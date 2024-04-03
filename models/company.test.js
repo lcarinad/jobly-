@@ -165,6 +165,9 @@ describe("get", function () {
       description: "Desc1",
       numEmployees: 1,
       logoUrl: "http://c1.img",
+      jobs: [
+        { equity: "0.01", id: expect.any(Number), salary: 100000, title: "j1" },
+      ],
     });
   });
 

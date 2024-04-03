@@ -1,7 +1,6 @@
 {
   "$id": "http://example.com/example.json",
   "type": "object",
-  "required": ["title", "salary", "equity"],
   "properties": {
     "title": {
       "type": "string",
@@ -22,11 +21,6 @@
       "examples": [0.5]
     }
   },
-  "examples": [
-    {
-      "title": "Manager",
-      "salary": 100000,
-      "equity": 0.5
-    }
-  ]
+  "additionalProperties": false,
+  "required": []
 }
