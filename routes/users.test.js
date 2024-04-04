@@ -14,6 +14,7 @@ const {
   u1Token,
   u2Token,
   adminToken,
+  testJobIds,
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -91,6 +92,22 @@ describe("POST /users", function () {
   });
 });
 
+/************************************** POST /users/username/jobs/id */
+describe("POST /users/username/jobs/id", function () {
+  test("works for admin", async function () {
+    const response = await request(app)
+      .post(`/users/u1/jobs/${testJobIds[1]}`)
+      .set("authorization", `Bearer ${adminToken}`);
+    expect(response.statusCode).toEqual(201);
+  });
+  test("works for currUser where username is currUser", async function () {
+    const response = await request(app)
+      .post(`/users/u1/jobs/${testJobIds[1]}`)
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(response.statusCode).toEqual(201);
+  });
+});
+
 /************************************** GET /users */
 
 describe("GET /users", function () {
@@ -148,7 +165,24 @@ describe("GET /users", function () {
 // /************************************** GET /users/:username */
 
 describe("GET /users/:username", function () {
-  test("works for currUser where currUser===username", async function () {
+  test("works for currUser where currUser===username w/ no jobs", async function () {
+    let username = "u2";
+    const resp = await request(app)
+      .get(`/users/${username}`)
+      .set("authorization", `Bearer ${u2Token}`);
+    expect(resp.body).toEqual({
+      user: {
+        username: "u2",
+        firstName: "U2F",
+        lastName: "U2L",
+        email: "user2@user.com",
+        isAdmin: false,
+        jobs: [],
+      },
+    });
+  });
+
+  test("works for currUser where currUser===username w/ jobs", async function () {
     let username = "u1";
     const resp = await request(app)
       .get(`/users/${username}`)
@@ -160,6 +194,7 @@ describe("GET /users/:username", function () {
         lastName: "U1L",
         email: "user1@user.com",
         isAdmin: false,
+        jobs: [testJobIds[0]],
       },
     });
   });
@@ -175,6 +210,7 @@ describe("GET /users/:username", function () {
         lastName: "U1L",
         email: "user1@user.com",
         isAdmin: false,
+        jobs: [testJobIds[0]],
       },
     });
   });
