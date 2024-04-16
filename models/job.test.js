@@ -52,28 +52,28 @@ describe("findAll", function () {
         title: "j1",
         salary: 100000,
         equity: "0.01",
-        companyName: "C1",
+        companyHandle: "c1",
       },
       {
         id: expect.any(Number),
         title: "j2",
         salary: 200000,
         equity: "0.2",
-        companyName: "C2",
+        companyHandle: "c2",
       },
       {
         id: expect.any(Number),
         title: "j3",
         salary: 300000,
         equity: "0.3",
-        companyName: "C3",
+        companyHandle: "c3",
       },
       {
         id: expect.any(Number),
         title: "j4",
         salary: 400000,
         equity: "0.4",
-        companyName: "C3",
+        companyHandle: "c3",
       },
     ]);
   });
@@ -82,15 +82,15 @@ describe("findAll", function () {
 /************************************** get(id) */
 
 describe("get", function () {
-  test("works", async function () {
-    //create a new job
-    let newJob = {
-      title: "new",
-      salary: 5,
-      equity: "0.5",
-      companyHandle: "c1",
-    };
-    //create the job and capture the returned job object
+  //create a new job
+  let newJob = {
+    title: "new",
+    salary: 5,
+    equity: "0.5",
+    companyHandle: "c1",
+  };
+  //create the job and capture the returned job object
+  test("create job works", async function () {
     let createdJob = await Job.create(newJob);
     const job = await Job.get(createdJob.id);
     expect(job).toEqual({
@@ -98,7 +98,7 @@ describe("get", function () {
       title: "new",
       salary: 5,
       equity: "0.5",
-      companyName: "C1",
+      companyHandle: "c1",
     });
   });
 
