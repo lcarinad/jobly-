@@ -30,7 +30,7 @@ describe("POST /companies", function () {
     numEmployees: 10,
   };
 
-  test("ok for admins", async function () {
+  test("admins can create new company", async function () {
     const resp = await request(app)
       .post("/companies")
       .send(newCompany)
@@ -39,6 +39,9 @@ describe("POST /companies", function () {
     expect(resp.body).toEqual({
       company: newCompany,
     });
+    const getCompanyResponse = await request(app).get("/companies");
+    expect(getCompanyResponse.body.companies).toHaveLength(4);
+    expect(getCompanyResponse.body.companies[3]).toEqual(newCompany);
   });
 
   test("bad request with non admin", async function () {
